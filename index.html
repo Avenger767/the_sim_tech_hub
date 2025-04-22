@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sim Tech Training Hub</title>
+  <style>
+    body { font-family: sans-serif; background: #f9f9f9; padding: 2em; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 2em; border-radius: 1em; box-shadow: 0 0 10px #ccc; }
+    h1, h2 { text-align: center; }
+    .question { margin-bottom: 1.5em; }
+    .question p { font-weight: bold; }
+    button { padding: 0.5em 1em; margin-top: 1em; }
+    .correct { background: #c6f6d5; }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <h1>Welcome to the Sim Tech Training Hub</h1>
+    <input type="text" id="username" placeholder="Enter your name" />
+    <button onclick="startTraining()">Start</button>
+  </div>
+
+  <script>
+    const interfaceQuiz = [
+      {
+        q: "What is the primary function of the MPIC system in a simulator?",
+        a: ["Interface cockpit hardware with simulation software", "Control simulator temperature", "Provide power to the instructor station", "Store pilot profiles"],
+        correct: 0
+      },
+      {
+        q: "Which software application is used to interface with the MPICs?",
+        a: ["SIMEX", "Launchpad", "OneUI", "DBManager"],
+        correct: 2
+      }
+    ];
+
+    let currentQuiz = 0;
+
+    function startTraining() {
+      const name = document.getElementById('username').value;
+      if (!name) return alert('Please enter your name');
+      showModule();
+    }
+
+    function showModule() {
+      document.getElementById('app').innerHTML = `
+        <h2>Training Module: TBD</h2>
+        <p>This is a placeholder for the upcoming training module.</p>
+        <button onclick="showQuiz()">Start Interface Quiz</button>
+      `;
+    }
+
+    function showQuiz() {
+      const quizHTML = interfaceQuiz.map((q, index) => {
+        return `
+          <div class="question">
+            <p>${index + 1}. ${q.q}</p>
+            ${q.a.map((opt, i) => `<div><input type="radio" name="q${index}" value="${i}"> ${opt}</div>`).join("")}
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById('app').innerHTML = `
+        <h2>Interface Quiz</h2>
+        ${quizHTML}
+        <button onclick="completeQuiz()">Complete</button>
+      `;
+    }
+
+    function completeQuiz() {
+      const inputs = document.querySelectorAll('input[type=radio]:checked');
+      inputs.forEach(input => {
+        const qIndex = parseInt(input.name.substring(1));
+        const aIndex = parseInt(input.value);
+        if (interfaceQuiz[qIndex].correct === aIndex) {
+          input.parentElement.classList.add('correct');
+        }
+      });
+
+      const summaryButton = document.createElement("button");
+      summaryButton.textContent = "Go to Summary";
+      summaryButton.onclick = () => showMotionQuiz();
+      document.getElementById('app').appendChild(summaryButton);
+    }
+  
+const motionQuiz = [
+  {
+    q: "What happens if you remove the EtherCAT secros cable at a drive?",
+    a: ["The GUI freezes", "Nothing changes", "A communication fault occurs", "The system powers off"],
+    correct: 2
+  },
+  {
+    q: "What is the purpose of the “Ownership” function in the Moog GUI?",
+    a: ["Disable GUI for maintenance", "Allow write access for 1 user", "Change user passwords", "Reset log files"],
+    correct: 1
+  }
+];
+
+function showMotionQuiz() {
+  const quizHTML = motionQuiz.map((q, index) => {
+    return `
+      <div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        ${q.a.map((opt, i) => `<div><input type="radio" name="mq${index}" value="${i}"> ${opt}</div>`).join("")}
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById('app').innerHTML = `
+    <h2>Motion Quiz</h2>
+    ${quizHTML}
+    <button onclick="completeMotionQuiz()">Complete</button>
+  `;
+}
+
+function completeMotionQuiz() {
+  const inputs = document.querySelectorAll('input[type=radio]:checked');
+  inputs.forEach(input => {
+    const qIndex = parseInt(input.name.substring(2));
+    const aIndex = parseInt(input.value);
+    if (motionQuiz[qIndex].correct === aIndex) {
+      input.parentElement.classList.add('correct');
+    }
+  });
+
+  const summaryButton = document.createElement("button");
+  summaryButton.textContent = "Go to Summary";
+  summaryButton.onclick = () => window.location.href = "summary.html";
+  document.getElementById('app').appendChild(summaryButton);
+}
+
+</script>
+</body>
+</html>
